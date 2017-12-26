@@ -1,4 +1,4 @@
-import urllib2, json
+import json, urllib2
 from tabulate import tabulate
 
 url = 'https://api.coinmarketcap.com/v1/ticker/?limit=25'
