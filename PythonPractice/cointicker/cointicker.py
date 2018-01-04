@@ -21,7 +21,7 @@ class Window(QtGui.QMainWindow):
 		comboBox.activated[str].connect(self.coin_choice)
 
 		self.show()
-
+ 
 
 	def coin_choice(self, text):
 		self.coinChoice.setText(text)
