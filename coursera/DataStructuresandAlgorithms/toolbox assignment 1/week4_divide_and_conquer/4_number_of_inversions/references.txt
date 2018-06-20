@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=I6ygiW8xN7Y&list=PLXFMmlk03Dt7Q0xr1PIAriY5623cKiH7V&index=15
+
+https://codehiker.wordpress.com/2012/03/18/inversions/
+
+https://www.reddit.com/r/learnpython/comments/5qrj6p/counting_inversions_using_divide_conquer/
+
+https://stackoverflow.com/questions/9903790/why-my-merge-sort-in-python-exceeded-maximum-recursion-depth
+
+https://stackoverflow.com/questions/252703/difference-between-append-vs-extend-list-methods-in-python
