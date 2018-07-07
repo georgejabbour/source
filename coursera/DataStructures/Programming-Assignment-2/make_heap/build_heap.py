@@ -3,7 +3,7 @@
 class HeapBuilder:
   def __init__(self):
     self._swaps = []
-    self._data = []
+    self._data = [] #H
 
   def ReadData(self):
     n = int(input())
@@ -15,23 +15,40 @@ class HeapBuilder:
     for swap in self._swaps:
       print(swap[0], swap[1])
 
-  def GenerateSwaps(self):
-    # The following naive implementation just sorts 
-    # the given sequence using selection sort algorithm
-    # and saves the resulting sequence of swaps.
-    # This turns the given array into a heap, 
-    # but in the worst case gives a quadratic number of swaps.
-    #
-    # TODO: replace by a more efficient implementation
-    for i in range(len(self._data)):
-      for j in range(i + 1, len(self._data)):
-        if self._data[i] > self._data[j]:
-          self._swaps.append((i, j))
-          self._data[i], self._data[j] = self._data[j], self._data[i]
+  def InPlaceHeapSort(self):
+    for i in range(int(len(self._data)/2),-1,-1):
+      self.SiftDown(i)
+
+  def Parent(i): #return the index of the Parent of i
+    return int((i - 1) / 2)
+  
+  def LeftChild(i): #return the index of the LeftChild of i
+    return 2*i+1
+
+  def RightChild(i): #return the index of the RightChild of i
+    return 2*i+2
+
+  def SiftUp(i): #sifts up the element at index i
+    while i>1 and self._data[Parent(i)]>self._data[i]:
+      self._data[Parent(i)],self._data[i] = self._data[i], self._data[Parent(i)]
+      i=Parent(i)
+
+  def SiftDown(self, i): #sifts down the element at index i
+    minIndex = i
+    l = HeapBuilder.LeftChild(i)
+    if l<len(self._data) and self._data[l]<self._data[minIndex]:
+      minIndex=l
+    r = HeapBuilder.RightChild(i)
+    if r<len(self._data) and self._data[r]<self._data[minIndex]:
+      minIndex=r
+    if i != minIndex:
+      self._swaps.append((i,minIndex))
+      self._data[i],self._data[minIndex] = self._data[minIndex],self._data[i]
+      self.SiftDown(minIndex)
 
   def Solve(self):
     self.ReadData()
-    self.GenerateSwaps()
+    self.InPlaceHeapSort()
     self.WriteResponse()
 
 if __name__ == '__main__':

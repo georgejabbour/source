@@ -1,0 +1,16 @@
+def Union(a, b):
+  pa = Find(a)
+  pb = Find(b)
+  if pa.rank <= pb.rank:
+    pa.parent = pb
+    pb.size += pa.size
+    if pa.rank == pb.rank:
+      pb.rank += 1
+  else:
+    pb.parent = pa
+    pa.size += pb.size
+
+def GreetBefore(A, B):
+  if A.arrival_time != B.arrival_time:
+    return A.arrival_time < B.arrival_time
+  return A.age > B.age
