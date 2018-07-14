@@ -1,47 +1,50 @@
 # python3
 
-class Query:
-    def __init__(self, query):
-        self.type = query[0]
-        self.number = int(query[1])
-        if self.type == 'add':
-            self.name = query[2]
+#takes a lot of memory but gets the job done..
+class Phonebook:
+    def __init__(self):
+        self.entries = [None] * 10000000
+
+    def add(self, name, number):
+        self.entries[number]=name
+
+    def delete(self,number):
+        if self.entries[number] != None:
+            self.entries[number]=None
+
+    def find(self,number):
+        if self.entries[number]==None:
+            return "not found"
+
+        return self.entries[number]
 
 def read_queries():
     n = int(input())
-    return [Query(input().split()) for i in range(n)]
+    return [Phonebook(input().split()) for i in range(n)]
 
 def write_responses(result):
     print('\n'.join(result))
 
 def process_queries(queries):
-    result = []
-    # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = []
-    for cur_query in queries:
-        if cur_query.type == 'add':
-            # if we already have contact with such number,
-            # we should rewrite contact's name
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    contact.name = cur_query.name
-                    break
-            else: # otherwise, just add it
-                contacts.append(cur_query)
-        elif cur_query.type == 'del':
-            for j in range(len(contacts)):
-                if contacts[j].number == cur_query.number:
-                    contacts.pop(j)
-                    break
-        else:
-            response = 'not found'
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    response = contact.name
-                    break
-            result.append(response)
-    return result
+    """Helper function which reads queries from standard input,
+    runs phonebook manager and sends the results to standard output.
+    """
+    for query in queries:
+        q = query.split()
+        todo = q[0]
+        num = int(q[1])
+        if todo == "add":
+            phonebook.add(q[2],num)
+        elif todo == "find":
+            print(phonebook.find(num))
+        elif todo == "del":
+            phonebook.delete(num)
+
 
 if __name__ == '__main__':
-    write_responses(process_queries(read_queries()))
+    phonebook = Phonebook()
+    qNum = int(input())
+    qs = [input() for i in range(qNum)]
+
+    process_queries(qs)
 

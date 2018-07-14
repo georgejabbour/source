@@ -16,42 +16,65 @@ class QueryProcessor:
 
     def __init__(self, bucket_count):
         self.bucket_count = bucket_count
-        # store all strings in one list
-        self.elems = []
+        ## store all strings in one list
+        #self.elems = []
+        self.buckets = [[]]*bucket_count #[[],[],[],[],[],[]] a bunch of buckets that hold strings
 
-    def _hash_func(self, s):
+    def _hash_func(self, s): #PolyHash from lecture
         ans = 0
         for c in reversed(s):
             ans = (ans * self._multiplier + ord(c)) % self._prime
         return ans % self.bucket_count
 
+    def add(self, string):
+        """
+        add("hello")
+        buckets[helloHash]=['hello']
+        add("world") # assume for simplicity it has the same hash
+        buckets[worldHash]=['hello']+['world'] = ['hello','world']
+
+        """
+        stringHash = self._hash_func(string)
+        bucket = self.buckets[stringHash]
+        if string not in bucket:
+            self.buckets[stringHash] = [string] + bucket
+
+    def delete(self, string):
+        stringHash = self._hash_func(string)
+        bucket = self.buckets[stringHash]
+        for buck in range(len(bucket)): #deletes first instance of the string
+            if string==bucket[buck]:
+                bucket.pop(buck)
+                break #stops after deleting one instance
+
+    def find(self, string):
+        stringHash = self._hash_func(string) #find where the string would have gone
+        if string in self.buckets[stringHash]: #if it actually is there...
+            return "yes" #...then say so
+        return "no" #otherwise say no
+
+    def check(self, hashh):
+        return self.buckets[hashh] #return whatever is in that hash, which is default of []
+
     def write_search_result(self, was_found):
         print('yes' if was_found else 'no')
 
-    def write_chain(self, chain):
+    def write_chain(self, chain): #this prints out the chain with the hash 'chain'
         print(' '.join(chain))
 
     def read_query(self):
         return Query(input().split())
 
     def process_query(self, query):
-        if query.type == "check":
-            # use reverse order, because we append strings to the end
-            self.write_chain(cur for cur in reversed(self.elems)
-                        if self._hash_func(cur) == query.ind)
-        else:
-            try:
-                ind = self.elems.index(query.s)
-            except ValueError:
-                ind = -1
-            if query.type == 'find':
-                self.write_search_result(ind != -1)
-            elif query.type == 'add':
-                if ind == -1:
-                    self.elems.append(query.s)
-            else:
-                if ind != -1:
-                    self.elems.pop(ind)
+        qt=query.type
+        if qt == 'check':
+            print(' '.join(proc.check(query.ind)))
+        elif qt == 'find':
+            print(proc.find(query.s))
+        elif qt == 'add':
+            proc.add(query.s)
+        elif qt =='del':
+            proc.delete(query.s)
 
     def process_queries(self):
         n = int(input())
