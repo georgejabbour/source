@@ -130,25 +130,44 @@ def insert(x):
     new_vertex = Vertex(x, x, None, None, None)  
   root = merge(merge(left, new_vertex), right)
   
-def erase(x): 
+def erase(x):
   global root
-  # Implement erase yourself
-  pass
-
-def search(x): 
-  global root
-  # Implement find yourself
   
-  return False
+  if search(x) == None:
+    return
   
-def sum(fr, to): 
-  global root
-  (left, middle) = split(root, fr)
-  (middle, right) = split(middle, to + 1)
-  ans = 0
-  # Complete the implementation of sum
+  root = splay(root)
+  root = merge(root.left, root.right)
+  
+  if root != None:
+    root.parent = None
 
-  return ans
+def search(x):
+  global root
+  
+  result, root = find(root, x)
+  
+  if result == None or result.key != x:
+    # print("none")
+    return None
+  
+  return result.key
+
+def sum(fr, to):
+  global root
+  
+  (l, m) = split(root, fr)
+  (m, r) = split(m, to + 1)
+  
+  if m == None:
+    a = 0
+    root = merge(l, r)
+  
+  else:
+    a = m.sum
+    root = merge(merge(l, m), r)
+  
+  return a
 
 MODULO = 1000000001
 n = int(stdin.readline())
@@ -163,7 +182,8 @@ for i in range(n):
     erase((x + last_sum_result) % MODULO)
   elif line[0] == '?':
     x = int(line[1])
-    print('Found' if search((x + last_sum_result) % MODULO) else 'Not found')
+    # print("search((x + last_sum_result) % MODULO): ", search((x + last_sum_result) % MODULO))
+    print('Found' if (search((x + last_sum_result) % MODULO) !=None) else 'Not found')
   elif line[0] == 's':
     l = int(line[1])
     r = int(line[2])
